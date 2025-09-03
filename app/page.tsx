@@ -233,18 +233,15 @@ export default function HomePage() {
           </div>
 
           <div className="mt-12 rounded-xl bg-orange-500/10 p-6">
-            <p className="text-sm font-medium text-orange-400">
-              Join 500+ mentors already using FLL Mentor Copilot
-            </p>
-            <div className="mt-3 flex -space-x-2">
-              {[...Array(5)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-8 w-8 rounded-full border-2 border-slate-800 bg-slate-700"
-                />
-              ))}
-              <div className="flex h-8 items-center rounded-full border-2 border-slate-800 bg-slate-700 px-3">
-                <span className="text-xs text-slate-300">+495</span>
+            <div className="flex items-center gap-3">
+              <Sparkles className="h-6 w-6 text-orange-400" />
+              <div>
+                <p className="text-sm font-medium text-orange-400">
+                  Join the mentor community
+                </p>
+                <p className="mt-1 text-xs text-slate-400">
+                  Help inspire the next generation of innovators
+                </p>
               </div>
             </div>
           </div>
