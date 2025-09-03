@@ -16,6 +16,7 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 ## 2) Decision (What we’re locking)
 
 ### Frontend & Runtime
+
 - **Framework:** Next.js (App Router) + **TypeScript**
 - **Styling:** Tailwind CSS
 - **UI Library:** **shadcn/ui** with **dark theme** (tokens live in `CLAUDE.md` + `/docs/ux_wireframes.md`)
@@ -23,11 +24,13 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 - **Forms:** React Hook Form + Zod (schema validation)
 
 ### Authentication & Session
+
 - **Auth Provider:** **Clerk**
 - Email/password + OAuth (Google/Microsoft/GitHub)
 - Session persistence via Clerk; server-side guards on API routes
 
 ### Data & Persistence
+
 - **ORM:** Prisma
 - **Dev DB:** SQLite (simple, file-based)
 - **Prod DB:** Postgres (managed; Vercel Postgres, Neon, or RDS)
@@ -39,11 +42,13 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
   - `RubricFeedback` (ownerId; payload, rubricAreas, createdAt)
 
 ### API & Boundaries
+
 - **API Surface:** Next.js Route Handlers (`/api/*`)
 - **Pattern:** tRPC or REST (start with REST for clarity)
 - **Contracts:** Zod-validated DTOs; typed responses
 
 ### Testing & Quality
+
 - **Unit:** Vitest
 - **Component:** React Testing Library
 - **Integration:** Next.js route handlers + Prisma test db
@@ -52,16 +57,19 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 - **CI:** GitHub Actions (typecheck, lint, format, unit/RTL/integration/E2E, build, audit)
 
 ### Deployment
+
 - **Target:** Vercel (Next.js-native)
 - **Pipelines:** PR checks; main → staging + smoke; tags `v*` → prod + post-deploy checks
 
 ### Observability & Security (Phase 1 scope)
+
 - **Logging:** Next.js default + console shipping to platform logs
 - **Error tracking:** (Phase 1.5) Sentry
 - **Secrets:** `.env` (local), encrypted repo or Vercel env vars (prod)
 - **Data isolation:** all CRUD scoped by `userId` from Clerk
 
 ### UI Theme (Dark) — Tokens (canonical source = `CLAUDE.md`)
+
 - **App BG:** `#0F172A` (slate-900)
 - **Card BG:** `#1E293B` (slate-800)
 - **Primary:** `#3B82F6` hover `#2563EB`
@@ -73,19 +81,19 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 
 ## 3) Rationale
 
-- **Speed + maintainability:** Next.js + shadcn/ui + Tailwind accelerates UI without bespoke component work.  
-- **Auth done right:** Clerk provides secure, low-effort auth + UI.  
-- **Predictable data:** Prisma across SQLite (dev) and Postgres (prod) keeps parity.  
-- **AI-accelerated dev:** Clear boundaries (typed DTOs, tests) keep Claude Code safe and productive.  
+- **Speed + maintainability:** Next.js + shadcn/ui + Tailwind accelerates UI without bespoke component work.
+- **Auth done right:** Clerk provides secure, low-effort auth + UI.
+- **Predictable data:** Prisma across SQLite (dev) and Postgres (prod) keeps parity.
+- **AI-accelerated dev:** Clear boundaries (typed DTOs, tests) keep Claude Code safe and productive.
 - **Theming upfront:** locking dark tokens avoids rework and ensures consistent look during MVP.
 
 ---
 
 ## 4) Alternatives Considered
 
-- **Remix**: great DX, but team and hosting optimized for Next.js.  
-- **tRPC-first**: nice DX; we’ll start REST for clarity and add tRPC later if needed.  
-- **Auth.js**: flexible, but Clerk reduces custom logic and speeds delivery.  
+- **Remix**: great DX, but team and hosting optimized for Next.js.
+- **tRPC-first**: nice DX; we’ll start REST for clarity and add tRPC later if needed.
+- **Auth.js**: flexible, but Clerk reduces custom logic and speeds delivery.
 - **MongoDB**: schemaless okay, but Prisma + Postgres fits our relational needs (plans, agendas).
 
 ---
@@ -93,12 +101,14 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 ## 5) Consequences (What this enables/limits)
 
 **Enables**
+
 - Rapid scaffold of mentor flows using shadcn components
 - Clean auth & per-user data partitioning
 - CI gates aligned with our testing pyramid
 - Straightforward deploys + previews on Vercel
 
 **Limits / Trade-offs**
+
 - Tighter coupling to Vercel features
 - Need to maintain Zod schemas for all API I/O
 - Dark theme requires consistent component theming (no “unstyled” stragglers)
@@ -107,17 +117,17 @@ We’re building **FLL Mentor Copilot**: an AI-first web app for mentors (Phase 
 
 ## 6) Implementation Notes
 
-- Initialize shadcn with dark theme tokens first; create base `ThemeProvider`.  
-- Gate all `/api/*` with Clerk middleware; add a server util `requireUser()` for route handlers.  
-- Prisma: create seed scripts and separate test DB; add `prisma migrate dev` to CI.  
-- Create generators for artifacts (plan, agenda, comms) as **pure functions** → easy to unit test.  
+- Initialize shadcn with dark theme tokens first; create base `ThemeProvider`.
+- Gate all `/api/*` with Clerk middleware; add a server util `requireUser()` for route handlers.
+- Prisma: create seed scripts and separate test DB; add `prisma migrate dev` to CI.
+- Create generators for artifacts (plan, agenda, comms) as **pure functions** → easy to unit test.
 - Add Playwright smoke suite for **login → dashboard → generate plan → save agenda**.
 
 ---
 
 ## 7) Rollback Plan
 
-- If Vercel limits block us, deploy to Fly.io or Railway with minimal Next config changes.  
+- If Vercel limits block us, deploy to Fly.io or Railway with minimal Next config changes.
 - If Clerk becomes a blocker, swap to Auth.js (keep user table minimal; abstract auth guards).
 
 ---

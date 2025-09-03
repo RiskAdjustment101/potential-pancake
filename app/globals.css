@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark theme tokens from CLAUDE.md and decision-0001.md */
+    --background: 222 47% 11%; /* #0F172A slate-900 */
+    --foreground: 210 20% 98%; /* #F8FAFC slate-50 */
+
+    --card: 217 33% 17%; /* #1E293B slate-800 */
+    --card-foreground: 210 20% 98%;
+
+    --popover: 217 33% 17%;
+    --popover-foreground: 210 20% 98%;
+
+    --primary: 217 91% 60%; /* #3B82F6 blue-500 */
+    --primary-foreground: 210 20% 98%;
+
+    --secondary: 215 25% 27%; /* slate-700 */
+    --secondary-foreground: 210 20% 98%;
+
+    --muted: 215 25% 27%;
+    --muted-foreground: 215 20% 46%; /* #64748B slate-400 */
+
+    --accent: 25 95% 53%; /* #F97316 orange-500 */
+    --accent-foreground: 210 20% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 20% 98%;
+
+    --border: 215 25% 27%; /* slate-700 */
+    --input: 215 25% 27%;
+    --ring: 217 91% 60%;
+
+    --radius: 1rem;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
