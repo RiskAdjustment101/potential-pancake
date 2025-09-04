@@ -37,7 +37,16 @@ In your Clerk dashboard:
 - **Microsoft**: Enable Microsoft OAuth  
 - **LinkedIn**: Enable LinkedIn OAuth
 
-### **3. Update Environment Variables**
+### **3. Configure User Profile Settings (Important!)**
+**Remove Phone Number Requirement:**
+1. Go to **User & Authentication** → **Email, Phone, Username**
+2. Find **"Phone number"** section
+3. Change from `Required` → `Optional` or `Hidden`
+4. **Save changes**
+
+This prevents unnecessary phone number collection during OAuth registration.
+
+### **4. Update Environment Variables**
 Replace the placeholder values in `.env.local`:
 
 ```bash
@@ -52,7 +61,7 @@ NEXT_PUBLIC_CLERK_AFTER_SIGN_IN_URL=/dashboard
 NEXT_PUBLIC_CLERK_AFTER_SIGN_UP_URL=/dashboard
 ```
 
-### **4. Test Authentication**
+### **5. Test Authentication**
 Once keys are configured:
 ```bash
 npm run dev

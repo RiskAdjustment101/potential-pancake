@@ -17,6 +17,9 @@ export default function SignUpPage() {
               footerActionLink: "text-blue-400 hover:text-blue-300",
             }
           }}
+          initialValues={{
+            phoneNumber: undefined
+          }}
         />
       </div>
     </div>

@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { SignInButton, SignUpButton, UserButton, useUser } from "@clerk/nextjs"
+import { SignInButton, SignUpButton, UserButton, useUser, SignOutButton } from "@clerk/nextjs"
 import {
   Calendar,
   FileText,
@@ -119,13 +119,23 @@ export default function HomePage() {
                     <p className="text-sm text-slate-400">Ready to mentor your team?</p>
                   </div>
                 </div>
-                <Button 
-                  className="mt-4 w-full bg-blue-500 hover:bg-blue-600"
-                  onClick={() => window.location.href = '/dashboard'}
-                >
-                  Go to Dashboard
-                  <ChevronRight className="ml-2 h-4 w-4" />
-                </Button>
+                <div className="mt-4 space-y-2">
+                  <Button 
+                    className="w-full bg-blue-500 hover:bg-blue-600"
+                    onClick={() => window.location.href = '/dashboard'}
+                  >
+                    Go to Dashboard
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                  <SignOutButton>
+                    <Button 
+                      variant="outline" 
+                      className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300"
+                    >
+                      Not you? Sign in with different account
+                    </Button>
+                  </SignOutButton>
+                </div>
               </CardContent>
             </Card>
           )}
