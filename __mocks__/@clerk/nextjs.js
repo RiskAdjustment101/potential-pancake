@@ -1,3 +1,5 @@
+import React from "react"
+
 const mockUser = {
   id: "test-user-id",
   firstName: "Test",
