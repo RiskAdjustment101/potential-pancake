@@ -27,8 +27,9 @@ export function MainNav() {
       <NavigationMenuList>
         {navItems.map((item) => (
           <NavigationMenuItem key={item.href}>
-            <Link href={item.href} legacyBehavior passHref>
-              <NavigationMenuLink
+            <NavigationMenuLink asChild>
+              <Link 
+                href={item.href}
                 className={cn(
                   navigationMenuTriggerStyle(),
                   "gap-2",
@@ -37,8 +38,8 @@ export function MainNav() {
               >
                 <item.icon className="h-4 w-4" />
                 {item.label}
-              </NavigationMenuLink>
-            </Link>
+              </Link>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         ))}
       </NavigationMenuList>
