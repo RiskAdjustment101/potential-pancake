@@ -26,11 +26,6 @@ port = 54323
 # External URL of the API server that frontend connects to.
 api_url = "http://127.0.0.1:54321"
 
-# Email template fetching from remote enabled.
-[studio.auth]
-# Whether to enable the auth service.
-enable = true
-
 [inbucket]
 # Port to use for the inbucket service.
 port = 54324
