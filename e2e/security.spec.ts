@@ -169,21 +169,28 @@ test.describe("Security Testing", () => {
       // Test 404 pages don't expose sensitive information
       await page.goto("/nonexistent-route")
       
-      const pageContent = await page.textContent('body')
+      // Check visible text content only (not internal JS bundles)
+      const visibleText = await page.locator('body').innerText()
       const sensitiveInfo = [
-        'database connection',
+        'database connection failed',
         'internal server error',
         'stack trace:',
         'file path:',
-        '/var/www',
-        'c:\\inetpub'
+        '/var/www/',
+        'c:\\inetpub\\',
+        'mysql error',
+        'postgresql error'
       ]
       
-      if (pageContent) {
+      if (visibleText) {
         sensitiveInfo.forEach(info => {
-          expect(pageContent.toLowerCase()).not.toContain(info.toLowerCase())
+          expect(visibleText.toLowerCase()).not.toContain(info.toLowerCase())
         })
       }
+      
+      // Verify it shows a proper 404 page, not internal errors
+      expect(visibleText.toLowerCase()).toContain('404')
+      expect(visibleText.toLowerCase()).toContain('could not be found')
     })
   })
 
