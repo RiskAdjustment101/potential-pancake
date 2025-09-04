@@ -4,7 +4,7 @@ export default function SignInPage() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-900">
       <div className="w-full max-w-md">
-        <SignIn 
+        <SignIn
           appearance={{
             elements: {
               formButtonPrimary: "bg-blue-500 hover:bg-blue-600",
@@ -15,7 +15,7 @@ export default function SignInPage() {
               formFieldLabel: "text-slate-300",
               formFieldInput: "bg-slate-900 border-slate-700 text-slate-50",
               footerActionLink: "text-blue-400 hover:text-blue-300",
-            }
+            },
           }}
         />
       </div>

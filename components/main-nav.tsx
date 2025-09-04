@@ -28,7 +28,7 @@ export function MainNav() {
         {navItems.map((item) => (
           <NavigationMenuItem key={item.href}>
             <NavigationMenuLink asChild>
-              <Link 
+              <Link
                 href={item.href}
                 className={cn(
                   navigationMenuTriggerStyle(),

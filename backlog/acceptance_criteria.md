@@ -36,7 +36,7 @@
 
 - [ ] Mentor can paste code or text snippet into a form.
 - [ ] System returns rubric-aligned feedback in format:  
-      `Rubric Area → Current Status → Specific Improvement → Concrete Example`.
+       `Rubric Area → Current Status → Specific Improvement → Concrete Example`.
 - [ ] Feedback is stored with timestamp under mentor account.
 - [ ] Unit tests confirm rubric areas map correctly.
 

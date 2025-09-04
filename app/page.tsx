@@ -90,7 +90,10 @@ export default function HomePage() {
                   </div>
 
                   <SignUpButton mode="modal">
-                    <Button variant="outline" className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800">
+                    <Button
+                      variant="outline"
+                      className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800"
+                    >
                       Create Account
                       <ChevronRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -120,17 +123,17 @@ export default function HomePage() {
                   </div>
                 </div>
                 <div className="mt-4 space-y-2">
-                  <Button 
+                  <Button
                     className="w-full bg-blue-500 hover:bg-blue-600"
-                    onClick={() => window.location.href = '/dashboard'}
+                    onClick={() => (window.location.href = "/dashboard")}
                   >
                     Go to Dashboard
                     <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
                   <SignOutButton>
-                    <Button 
-                      variant="outline" 
-                      className="w-full border-slate-700 bg-slate-900 hover:bg-slate-800 text-slate-300"
+                    <Button
+                      variant="outline"
+                      className="w-full border-slate-700 bg-slate-900 text-slate-300 hover:bg-slate-800"
                     >
                       Not you? Sign in with different account
                     </Button>
@@ -176,9 +179,7 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <Sparkles className="h-6 w-6 text-orange-400" />
               <div>
-                <p className="text-sm font-medium text-orange-400">
-                  Join the mentor community
-                </p>
+                <p className="text-sm font-medium text-orange-400">Join the mentor community</p>
                 <p className="mt-1 text-xs text-slate-400">
                   Help inspire the next generation of innovators
                 </p>
