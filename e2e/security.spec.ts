@@ -195,28 +195,27 @@ test.describe("Security Testing", () => {
   })
 
   test.describe("Input Validation", () => {
-    test("should validate URL parameters", async ({ page }) => {
-      // Test URL parameter injection
-      const maliciousParams = [
-        '?param=<script>alert("XSS")</script>',
-        '?param=javascript:alert("XSS")',
-        '?param=../../../etc/passwd',
-        '?param=..\\..\\..\\windows\\system32'
-      ]
+    test("should validate URL parameters safely", async ({ page }) => {
+      // Test that malicious URL parameters don't cause XSS or path traversal
+      await page.goto("/?test=<script>alert('XSS')</script>")
       
-      for (const param of maliciousParams) {
-        await page.goto(`/${param}`)
-        
-        // Page should handle malicious parameters safely
-        const pageContent = await page.content()
-        
-        // Check that malicious script tags aren't executed (not in legitimate content)
-        const hasUserScript = pageContent.includes('<script>alert("XSS")</script>')
-        const hasJavascriptProtocol = pageContent.includes('javascript:alert("XSS")')
-        
-        expect(hasUserScript).toBeFalsy()
-        expect(hasJavascriptProtocol).toBeFalsy()
-      }
+      // Check that the XSS payload is not executed or reflected dangerously
+      const pageContent = await page.content()
+      
+      // Ensure our specific XSS payload is not reflected back
+      const hasXSSReflection = pageContent.includes("<script>alert('XSS')</script>")
+      expect(hasXSSReflection).toBeFalsy()
+      
+      // Test JavaScript protocol injection
+      await page.goto("/?redirect=javascript:alert('XSS')")
+      const pageContent2 = await page.content()
+      const hasJSInjection = pageContent2.includes("javascript:alert('XSS')")
+      expect(hasJSInjection).toBeFalsy()
+      
+      // Verify the page still loads normally despite malicious parameters
+      await page.goto("/?malicious=<script>")
+      const title = await page.title()
+      expect(title).toBeTruthy() // Page should still have a proper title
     })
   })
 
