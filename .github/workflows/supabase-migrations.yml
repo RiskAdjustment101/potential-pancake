@@ -8,6 +8,8 @@ on:
       - 'supabase/config.toml'
       - '.github/workflows/supabase-migrations.yml'
   workflow_dispatch:
+  schedule:
+    - cron: '0 */6 * * *'  # Also run every 6 hours as backup
 
 jobs:
   deploy:
