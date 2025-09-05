@@ -75,6 +75,7 @@ DECLARE
     current_editor UUID;
     lock_expiry TIMESTAMP WITH TIME ZONE;
     result JSONB;
+    rows_updated INTEGER;
 BEGIN
     -- Check current lock status
     SELECT currently_editing_mentor_id, lock_expires_at 
@@ -96,7 +97,8 @@ BEGIN
             OR currently_editing_mentor_id = mentor_id
         );
         
-    GET DIAGNOSTICS lock_acquired = ROW_COUNT > 0;
+    GET DIAGNOSTICS rows_updated = ROW_COUNT;
+    lock_acquired := rows_updated > 0;
     
     -- Return result
     IF lock_acquired THEN
@@ -124,6 +126,7 @@ CREATE OR REPLACE FUNCTION release_plan_lock(plan_id UUID, mentor_id UUID)
 RETURNS BOOLEAN AS $$
 DECLARE
     lock_released BOOLEAN := false;
+    rows_updated INTEGER;
 BEGIN
     UPDATE season_plans 
     SET 
@@ -134,7 +137,8 @@ BEGIN
         id = plan_id 
         AND currently_editing_mentor_id = mentor_id;
         
-    GET DIAGNOSTICS lock_released = ROW_COUNT > 0;
+    GET DIAGNOSTICS rows_updated = ROW_COUNT;
+    lock_released := rows_updated > 0;
     RETURN lock_released;
 END;
 $$ LANGUAGE plpgsql;
@@ -144,6 +148,7 @@ CREATE OR REPLACE FUNCTION extend_plan_lock(plan_id UUID, mentor_id UUID)
 RETURNS BOOLEAN AS $$
 DECLARE
     lock_extended BOOLEAN := false;
+    rows_updated INTEGER;
 BEGIN
     UPDATE season_plans 
     SET 
@@ -153,7 +158,8 @@ BEGIN
         AND currently_editing_mentor_id = mentor_id
         AND lock_expires_at > NOW(); -- Only extend if still valid
         
-    GET DIAGNOSTICS lock_extended = ROW_COUNT > 0;
+    GET DIAGNOSTICS rows_updated = ROW_COUNT;
+    lock_extended := rows_updated > 0;
     RETURN lock_extended;
 END;
 $$ LANGUAGE plpgsql;
