@@ -17,82 +17,42 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
         with:
-          node-version: '20'
+          version: latest
 
-      - name: Install Supabase client
-        run: npm install @supabase/supabase-js
-
-      - name: Run migrations via Supabase Management API
+      - name: Deploy migrations with Supabase CLI
         env:
-          SUPABASE_URL: https://lodmtemrzvmiihfoidrt.supabase.co
-          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
         run: |
           echo "🚀 Deploying database migrations to Supabase..."
           
-          # Create a Node.js script to run migrations
-          cat > run-migrations.js << 'EOF'
-          const { createClient } = require('@supabase/supabase-js');
-          const fs = require('fs');
-          const path = require('path');
+          # Login with access token
+          supabase login --token "$SUPABASE_ACCESS_TOKEN"
           
-          const supabaseUrl = process.env.SUPABASE_URL;
-          const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
+          # Link to project with database password
+          echo "Linking to project..."
+          supabase link --project-ref lodmtemrzvmiihfoidrt --password "$SUPABASE_DB_PASSWORD"
           
-          if (!supabaseUrl || !supabaseKey) {
-            console.error('Missing Supabase credentials');
-            process.exit(1);
-          }
+          # Push migrations
+          echo "Pushing migrations..."
+          supabase db push --password "$SUPABASE_DB_PASSWORD"
           
-          const supabase = createClient(supabaseUrl, supabaseKey);
-          
-          async function runMigrations() {
-            try {
-              // Read migration file
-              const migrationPath = path.join(__dirname, 'supabase/migrations/20240905000001_complete_setup.sql');
-              const sql = fs.readFileSync(migrationPath, 'utf8');
-              
-              console.log('📄 Running migration: 20240905000001_complete_setup.sql');
-              console.log('This will create tables with RLS enabled...');
-              
-              // Note: For complex migrations, you might need to use the Supabase CLI
-              // or run the SQL directly in the dashboard
-              console.log('⚠️  Due to limitations, please run the migration manually:');
-              console.log('1. Go to: https://supabase.com/dashboard/project/lodmtemrzvmiihfoidrt/sql');
-              console.log('2. Copy and run the migration SQL');
-              console.log('');
-              console.log('Migration content preview:');
-              console.log(sql.substring(0, 500) + '...');
-              
-            } catch (error) {
-              console.error('Error:', error.message);
-              process.exit(1);
-            }
-          }
-          
-          runMigrations();
-          EOF
-          
-          node run-migrations.js
+          echo "✅ Migrations deployment complete!"
 
-      - name: Alternative - Use Supabase CLI with Service Key
-        if: always()
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+      - name: Fallback instructions
+        if: failure()
         run: |
-          # Install Supabase CLI
-          curl -L https://github.com/supabase/cli/releases/latest/download/supabase_linux_amd64.tar.gz | tar xz
-          sudo mv supabase /usr/local/bin/
-          
-          # Try to link and push
-          supabase link --project-ref lodmtemrzvmiihfoidrt --password "${{ secrets.SUPABASE_DB_PASSWORD }}" || true
-          supabase db push || true
-          
-          if [ $? -ne 0 ]; then
-            echo "⚠️  Automated deployment requires manual setup"
-            echo "Please run the migration manually in Supabase SQL Editor"
-          fi
+          echo "❌ Automated deployment failed"
+          echo ""
+          echo "📝 Manual setup required:"
+          echo "1. Go to: https://supabase.com/dashboard/project/lodmtemrzvmiihfoidrt/sql"
+          echo "2. Run the SQL from: supabase/migrations/20240905000001_complete_setup.sql"
+          echo ""
+          echo "This will:"
+          echo "✅ Create all 4 tables"
+          echo "✅ Enable RLS"
+          echo "✅ Set up security policies"
