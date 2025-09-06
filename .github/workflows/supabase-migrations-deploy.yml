@@ -29,6 +29,11 @@ jobs:
         run: |
           supabase link --project-ref $SUPABASE_PROJECT_REF
 
+      - name: Repair migration history (if needed)
+        run: |
+          # Repair migration history to handle deleted migration files
+          supabase migration repair --status reverted 20240905000001 20240905000002 20240905000003 20240905000004 20240905000005 20240905000006 || echo "Migration repair attempted"
+          
       - name: Push database migrations
         run: |
           supabase db push
