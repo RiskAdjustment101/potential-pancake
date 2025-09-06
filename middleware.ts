@@ -1,15 +1,33 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
+import { NextResponse } from "next/server"
 
 const isProtectedRoute = createRouteMatcher([
   "/dashboard(.*)",
   "/season-plans(.*)",
   "/agendas(.*)",
   "/comms(.*)",
+  "/onboarding(.*)",
+])
+
+const isPublicRoute = createRouteMatcher([
+  "/",
+  "/sign-in(.*)",
+  "/sign-up(.*)",
 ])
 
 export default clerkMiddleware(async (auth, req) => {
+  // Protect routes that require authentication
   if (isProtectedRoute(req)) {
-    await auth.protect()
+    const { userId } = await auth.protect()
+    
+    // Check if user has completed onboarding (this will be improved with actual DB check)
+    const isOnboardingRoute = req.nextUrl.pathname.startsWith('/onboarding')
+    const needsOnboarding = !req.cookies.get('onboarding_completed')
+    
+    // Redirect to onboarding if not completed (except if already on onboarding page)
+    if (userId && needsOnboarding && !isOnboardingRoute && !isPublicRoute(req)) {
+      return NextResponse.redirect(new URL('/onboarding', req.url))
+    }
   }
 })
 
