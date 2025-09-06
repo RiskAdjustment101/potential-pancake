@@ -6,18 +6,18 @@ To enable automatic Supabase migrations via GitHub Actions, you need to configur
 
 1. **SUPABASE_ACCESS_TOKEN**
    - Get from: https://supabase.com/dashboard/account/tokens
-   - Create a new access token with appropriate permissions
-   - This authenticates the Supabase CLI
+   - Create a new personal access token
+   - This authenticates the Supabase CLI with the Management API
 
-2. **SUPABASE_PROJECT_ID**
-   - Your project ID: `lodmtemrzvmiihfoidrt`
-   - Found in your Supabase project settings
+2. **SUPABASE_PROJECT_REF** 
+   - Your project reference ID: `lodmtemrzvmiihfoidrt`
+   - Found in your Supabase project URL or Settings
 
-3. **SUPABASE_DB_URL**
-   - Format: `postgresql://postgres:[YOUR-PASSWORD]@db.lodmtemrzvmiihfoidrt.supabase.co:5432/postgres`
+3. **SUPABASE_DB_PASSWORD**
+   - Your Postgres `postgres` user password
    - Get from: Supabase Dashboard > Settings > Database
-   - Use the "Connection string" (not the pooler URL)
-   - Replace `[YOUR-PASSWORD]` with your database password
+   - This is the database password, NOT an API key
+   - If forgotten, you can reset it from the dashboard
 
 ## How to Add Secrets to GitHub
 
@@ -47,6 +47,26 @@ Once secrets are configured:
 - Rotate tokens periodically
 - The SUPABASE_DB_URL contains your database password - handle with care
 
+## Workflows
+
+We have two workflows:
+
+1. **Deploy Database Migrations** (`supabase-migrations-deploy.yml`)
+   - Triggers on push to `main` branch
+   - Applies migrations to production database
+   - Uses: SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD, SUPABASE_PROJECT_REF
+
+2. **Validate Database Migrations** (`supabase-migrations-validate.yml`)
+   - Triggers on pull requests
+   - Tests migrations locally for syntax/ordering issues
+   - No secrets required (runs locally)
+
 ## Current Migration Files
 
 - `supabase/migrations/20250906101655_initial_schema.sql` - Initial database schema with tables and RLS policies
+
+## Troubleshooting
+
+- **"password authentication failed"**: You need SUPABASE_DB_PASSWORD (the Postgres password), not API keys
+- **"connection refused"**: May be temporarily banned after failed attempts. Wait 30 minutes or use `supabase network-bans remove`
+- **Interactive prompts in CI**: Ensure all three secrets are set correctly
