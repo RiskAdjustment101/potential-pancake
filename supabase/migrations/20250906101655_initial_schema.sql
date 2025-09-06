@@ -1,3 +1,5 @@
+-- Initial schema for FLL Mentor Copilot
+-- Created: 2025-09-06
 -- Enable UUID extension
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
